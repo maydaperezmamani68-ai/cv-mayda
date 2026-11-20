@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Profesional - Mayda Shirley Pérez Mamani</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                        },
+                        accent: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="h-full font-sans antialiased bg-slate-50 text-slate-800 selection:bg-rose-500 selection:text-white">
+
+    <!-- ==================== PANTALLA DE LOGIN (MODO CLARO CUIDADO) ==================== -->
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 transition-opacity duration-300">
+        <div class="w-full max-w-md rounded-2xl p-8 shadow-2xl bg-white border border-slate-200 relative overflow-hidden">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 shadow-sm mb-3">
+                    <i class="fa-solid fa-lock text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold font-heading text-slate-900">Portal Privado de CV</h2>
+                <p class="text-xs text-slate-500 mt-1">Ingresa las credenciales para acceder al documento</p>
+            </div>
+
+            <!-- Demo Banner -->
+            <div class="mb-6 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 flex items-start gap-3">
+                <i class="fa-solid fa-circle-info text-rose-500 text-base mt-0.5"></i>
+                <div>
+                    <span class="font-semibold text-slate-900">Credenciales por defecto:</span><br>
+                    Usuario: <code class="bg-slate-200/80 px-1.5 py-0.5 rounded font-mono text-slate-800">mayda</code> | Contraseña: <code class="bg-slate-200/80 px-1.5 py-0.5 rounded font-mono text-slate-800">12345</code>
+                </div>
+            </div>
+
+            <!-- Formulario Login -->
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Usuario</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                            <i class="fa-solid fa-user text-sm"></i>
+                        </span>
+                        <input type="text" id="username" required value="mayda" placeholder="Usuario" 
+                            class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-slate-900 text-sm transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Contraseña</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                            <i class="fa-solid fa-key text-sm"></i>
+                        </span>
+                        <input type="password" id="password" required value="12345" placeholder="••••••••" 
+                            class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 text-slate-900 text-sm transition">
+                    </div>
+                </div>
+
+                <div id="loginError" class="hidden text-xs text-rose-600 font-medium py-1 text-center bg-rose-50 rounded-lg border border-rose-200">
+                    <i class="fa-solid fa-circle-exclamation mr-1"></i> Usuario o contraseña incorrectos.
+                </div>
+
+                <button type="submit" 
+                    class="w-full py-3 bg-gradient-to-r from-rose-600 to-accent-600 hover:from-rose-700 hover:to-accent-700 text-white font-semibold rounded-xl shadow-md transition transform active:scale-95 flex items-center justify-center gap-2">
+                    <span>Acceder al Curriculum</span>
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== CONTENIDO PRINCIPAL DEL CV (ESTILO SOBRIO, BLANCO Y CLEAN) ==================== -->
+    <div id="mainContent" class="hidden min-h-screen pb-20">
+        
+        <!-- HEADER NAV PRIVADO -->
+        <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold font-heading text-sm shadow">
+                        MP
+                    </div>
+                    <div>
+                        <h1 class="font-bold font-heading text-slate-900 text-sm sm:text-base leading-tight">Mayda Shirley Perez Mamani</h1>
+                        <p class="text-xs text-slate-500">Currículum Vitae Profesional</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="window.print()" title="Imprimir CV" class="p-2 text-slate-600 hover:text-rose-600 hover:bg-slate-100 rounded-xl transition">
+                        <i class="fa-solid fa-print text-base"></i>
+                    </button>
+                    <button onclick="handleLogout()" class="flex items-center gap-2 px-3.5 py-1.5 bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 border border-slate-200 hover:border-rose-200 font-medium text-xs sm:text-sm rounded-xl transition">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span class="hidden sm:inline">Cerrar Sesión</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENEDOR DOCUMENTO CV (TARJETA BLANCA IMPRESA SOBRE FONDO SUAVE) -->
+        <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+            
+            <!-- 1. ENCABEZADO DE PERFIL & DATOS DIRECTOS -->
+            <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 relative overflow-hidden">
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8">
+                    
+                    <!-- Foto de Perfil Interactiva -->
+                    <div class="relative group flex-shrink-0">
+                        <div class="w-36 h-36 sm:w-40 sm:h-40 rounded-2xl overflow-hidden border-2 border-slate-200 shadow-md bg-slate-100 relative">
+                            <img id="profileImage" src="12121212.jpeg"foto.perfil.jpg", 
+        description: "..."/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" alt="Mayda Shirley Pérez Mamani" class="w-full h-full object-cover">
+                        </div>
+                        <label for="profileUpload" class="absolute bottom-2 right-2 bg-slate-900 hover:bg-rose-600 text-white p-2 rounded-xl shadow-lg transition cursor-pointer" title="Cambiar Foto de Perfil">
+                            <i class="fa-solid fa-camera text-xs"></i>
+                        </label>
+                        <input type="file" id="profileUpload" accept="image/* "yo i.jpg", description: "..."" class="hidden" onchange="changeProfileImage(event)">
+                    </div>
+
+                    <!-- Información Principal -->
+                    <div class="flex-1 text-center md:text-left space-y-3">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-rose-50 border border-rose-100 text-rose-700 rounded-full text-xs font-semibold">
+                            <i class="fa-solid fa-code text-rose-500"></i> Estudiante de Sistemas & Emprendedora Tech
+                        </div>
+                        
+                        <h1 class="text-3xl sm:text-4xl font-bold font-heading text-slate-900 tracking-tight">Mayda Shirley Pérez Mamani</h1>
+                        
+                        <p class="text-slate-600 text-sm leading-relaxed max-w-2xl">
+                            Estudiante avanzada del <strong>IESTP "Santa Lucía"</strong> enfocada en el Desarrollo de Sistemas de Información. Emprendedora proactiva y fundadora de <strong>SkinGlow</strong>. Apasionada por el diseño web frontend, arquitectura de datos y soporte técnico especializado.
+                        </p>
+                        
+                        <!-- Contactos Directos Integrados -->
+                        <div class="pt-2 flex flex-wrap justify-center md:justify-start gap-2.5 text-xs text-slate-600">
+                            <a href="https://wa.me/51914713607?text=Hola%20Mayda,%20vi%20tu%20CV%20interactivo" target="_blank" rel="noopener" 
+                                class="flex items-center gap-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 px-3 py-1.5 rounded-xl font-medium transition">
+                                <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> +51 914 713 607
+                            </a>
+                            <a href="mailto:maydaperezmamani@gmail.com" 
+                                class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 px-3 py-1.5 rounded-xl font-medium transition">
+                                <i class="fa-solid fa-envelope text-rose-500 text-xs"></i> maydaperezmamani@gmail.com
+                            </a>
+                            <a href="http://www.tiktok.com/@nuskintubelleza" target="_blank" rel="noopener" 
+                                class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 px-3 py-1.5 rounded-xl font-medium transition">
+                                <i class="fa-brands fa-tiktok text-slate-900 text-xs"></i> @nuskintubelleza
+                            </a>
+                            <span class="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600">
+                                <i class="fa-solid fa-location-dot text-rose-500 text-xs"></i> Santa Lucia / Puno, Perú
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. RESUMEN PROFESIONAL -->
+            <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h2 class="text-xl font-bold font-heading text-slate-900">Perfil Profesional</h2>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    Estudiante proactiva y orientada a soluciones tecnológicas innovadoras, con sólida formación en el Análisis y Desarrollo de Sistemas de Información. Combino habilidades de programación técnica, ensamble y mantenimiento de hardware con la visión comercial estratégica desarrollada en proyectos independientes. Destacada por mi alta capacidad de aprendizaje continuo, atención a los detalles e integridad en el trabajo cooperativo.
+                </p>
+            </section>
+
+            <!-- 3. EDUCACIÓN Y FORMACIÓN (ORDEN CRONOLÓGICO FORMAL) -->
+            <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-accent-50 text-accent-600 flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold font-heading text-slate-900">Educación & Formación</h2>
+                        <p class="text-xs text-slate-500">Historial académico estructurado en orden cronológico formal</p>
+                    </div>
+                </div>
+
+                <div class="relative border-l-2 border-slate-200 pl-6 ml-3 space-y-6">
+                    
+                    <!-- 1. Educación Superior -->
+                    <div class="relative">
+                        <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-rose-600 border-4 border-white shadow-sm"></div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <h3 class="font-bold text-slate-900 text-base">IESTP "Santa Lucía"</h3>
+                            <span class="text-xs font-medium px-2.5 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-100 w-max">Actualmente en Curso</span>
+                        </div>
+                        <p class="text-xs font-semibold text-rose-600 mt-0.5">ARQUITECTURA DE PLATAFORMAS DE SERVICIOS DE TECNOLOGIA DE INFORMACION</p>
+                        <p class="text-xs text-slate-500 mt-1">Especialización en desarrollo web frontend/backend, algoritmos, bases de datos y soporte técnico.</p>
+                    </div>
+
+                    <!-- 2. Educación Secundaria -->
+                    <div class="relative">
+                        <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-slate-400 border-4 border-white"></div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <h3 class="font-bold text-slate-900 text-sm">Educacion segundaria</h3>
+                            <span class="text-xs text-slate-500">Concluido</span>
+                        </div>
+                        <p class="text-xs text-slate-600">Colegio / POLITECNICO INDUSTRIAL SANTA LUCIA</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Educacion productivo para el trabajo.</p>
+                    </div>
+
+                    <!-- 3. Educación Primaria -->
+                    <div class="relative">
+                        <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-slate-300 border-4 border-white"></div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <h3 class="font-bold text-slate-800 text-sm">Escuela Primaria</h3>
+                            <span class="text-xs text-slate-500">Concluido</span>
+                        </div>
+                        <p class="text-xs text-slate-500">70400 Virgen del carmen</p>
+                    </div>
+
+                    <!-- 4. Educación Inicial -->
+                    <div class="relative">
+                        <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-slate-200 border-4 border-white"></div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <h3 class="font-bold text-slate-700 text-sm">Jardín / Educación Inicial</h3>
+                            <span class="text-xs text-slate-400">Concluido</span>
+                        </div>
+                        <p class="text-xs text-slate-400">255 Instituto Inicial Primaria</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 4. DIPLOMAS Y CERTIFICACIONES -->
+            <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-sm">
+                            <i class="fa-solid fa-certificate"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold font-heading text-slate-900">Diplomas & Certificados</h2>
+                            <p class="text-xs text-slate-500">Acreditaciones de estudios y talleres complementarios</p>
+                        </div>
+                    </div>
+
+                    <label for="uploadDiploma" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs rounded-xl transition cursor-pointer flex items-center gap-2">
+                        <i class="fa-solid fa-plus text-xs"></i> Añadir Certificado
+                    </label>
+                    <input type="file" id="uploadDiploma" accept="image/*" class="hidden" onchange="addDiploma(event)">
+                </div>
+
+                <div id="diplomasGallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    
+                    <!-- Diploma 1 -->
+                    <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 hover:border-slate-300 transition group">
+                        <div class="h-40 rounded-lg overflow-hidden mb-3 relative bg-slate-200">
+                            <img src="certificado.png" alt="Certificado Desarrollo Web" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <button onclick="openModal('https://images.unsplash.com/photo-1589330694653-aded6f78655b?auto=format&fit=crop&q=80&w=1000', 'Certificado en Desarrollo Web & Sistemas')" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium gap-2">
+                                <i class="fa-solid fa-expand"></i> Ver Certificado
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900">Certificado en Fibra Optica </h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">IESTP Santa Lucía</p>
+                    </div>
+                    <!-- Diploma 2 -->
+                    <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 hover:border-slate-300 transition group">
+                        <div class="h-40 rounded-lg overflow-hidden mb-3 relative bg-slate-200">
+                            <img src="pro im.jpg" alt="Diploma E-Commerce" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <button onclick="openModal('https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?auto=format&fit=crop&q=80&w=1000', 'Diploma de Gestión de Negocios')" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium gap-2">
+                                <i class="fa-solid fa-expand"></i> Ver Certificado
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900">Diploma en E-Commerce & Ventas</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Especialización de Emprendimiento</p>
+                    </div>
+
+                    <!-- Diploma 3 -->
+                    <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 hover:border-slate-300 transition group">
+                        <div class="h-40 rounded-lg overflow-hidden mb-3 relative bg-slate-200">
+                            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=500" alt="Diploma Arduino" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <button onclick="openModal('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1000', 'Constancia de Robótica y Sensores')" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium gap-2">
+                                <i class="fa-solid fa-expand"></i> Ver Certificado
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900">Taller de Innovación Tecnológica</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Proyectos Arduino & Hardware</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 5. EXPERIENCIA LABORAL & PROYECTOS TÉCNICOS (CON SUBIDA DE FOTOS EVIDENCIAS) -->
+            <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-sm">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold font-heading text-slate-900">Experiencia Laboral & Proyectos</h2>
+                            <p class="text-xs text-slate-500">Demostraciones de trabajo práctico, asistencia clínica y desarrollo</p>
+                        </div>
+                    </div>
+
+                    <label for="uploadWorkExp" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs rounded-xl transition cursor-pointer flex items-center gap-2">
+                        <i class="fa-solid fa-plus text-xs"></i> Subir Foto Evidencia
+                    </label>
+                    <input type="file" id="uploadWorkExp" accept="image/*" class="hidden" onchange="addGalleryImage('workExpGallery', event)">
+                </div>
+
+                <div id="workExpGallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    
+                    <!-- Evidencia Principal: Medicina Estética (3 Años de Experiencia) -->
+                    <div class="bg-rose-50/50 rounded-xl p-3.5 border border-rose-200 hover:border-rose-300 transition group relative">
+                        <span class="absolute top-5 right-5 bg-rose-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10 shadow">
+                            3 Años de Exp.
+                        </span>
+                        <div class="h-56 rounded-lg overflow-hidden mb-3 relative bg-slate-200">
+                            <img src="yo.jpeg" alt="Mayda Shirley en Medicina Estética" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300" onerror="this.src='https://image: "yo i.jpg", 
+        description: "..."/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=500'">
+                            <button onclick="openModal('yo i.jpg', 'Asistente & Especialista en Medicina Estética (3 Años de Experiencia)')" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium gap-2">
+                                <i class="fa-solid fa-expand"></i> Ver Evidencia Fotográfica
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900">Asistente & Especialista en Medicina Estética</h4>
+                        <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                            <strong>3 años de trayectoria laboral</strong> en cabina estética clínica. Manejo de aparotología facial y corporal, protocolos de skincare profesional, esterilización, preparación de pacientes y atención personalizada.
+                            
+                        </p>
+                    </div>
+
+                    <!-- Evidencia 2: Instalaciones electricitas -->
+                    <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 hover:border-slate-300 transition group">
+                        <div class="h-56 rounded-lg overflow-hidden mb-3 relative bg-slate-200">
+                            <img src="cableado.jpeg" alt="Mantenimiento de computadoras" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <button onclick="openModal('https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=1000', 'Soporte y Mantenimiento Técnico de Cómputo')" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium gap-2">
+                                <i class="fa-solid fa-expand"></i> Ampliar
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900">Instalaciones eléctricistas </h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">instalacio y renovacion de cableado electricos.</p>
+                    </div>
+
+                    <!-- Evidencia 3: Desarrollo Web Frontend -->
+                    <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 hover:border-slate-300 transition group">
+                        <div class="h-56 rounded-lg overflow-hidden mb-3 relative bg-slate-200">
+                            <img src="experiencia.jpg" alt="Desarrollo Web Frontend" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <button onclick="openModal('https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=1000', 'Interfaces Web')" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium gap-2">
+                                <i class="fa-solid fa-expand"></i> Ampliar
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900">Desarrollo Frontend Web</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Maquetación responsive con HTML, Tailwind CSS y JavaScript.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. EMPRENDIMIENTOS PERSONALES (SKINGLOW) -->
+            <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center font-bold text-sm">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold font-heading text-slate-900">Emprendimientos Destacados</h2>
+                            <p class="text-xs text-slate-500">Iniciativas comerciales y experiencia en gestión independiente</p>
+                        </div>
+                    </div>
+
+                    <label for="uploadSkinGlow" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-medium text-xs rounded-xl transition cursor-pointer flex items-center gap-2">
+                        <i class="fa-solid fa-camera text-xs"></i> Subir Foto de Producto
+                    </label>
+                    <input type="file" id="uploadSkinGlow" accept="image/*" class="hidden" onchange="addGalleryImage('skinglowGallery', event)">
+                </div>
+
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 mb-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-slate-900 text-base">SkinGlow</h3>
+                        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-pink-100 text-pink-700">Cosmética & Skincare</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                        Emprendimiento personal enfocado en la distribución, marketing digital y ventas de productos cosméticos y cuidado personal. Responsable del control de inventario, atención al cliente y presencia digital en redes sociales.
+                    </p>
+                </div>
+
+                <div id="skinglowGallery" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="h-32 rounded-lg overflow-hidden bg-slate-200 border border-slate-200">
+                        <img src="skin1 (1).jpeg" alt="SkinGlow 1" class="w-full h-full object-cover">
+                    </div>
+                    <div class="h-32 rounded-lg overflow-hidden bg-slate-200 border border-slate-200">
+                        <img src="skin1 (2).jpeg" alt="SkinGlow 2" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. HABILIDADES TÉCNICAS & ANÁLISIS FODA PERSONAL -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Habilidades Técnicas -->
+                <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-sm">
+                            <i class="fa-solid fa-sliders"></i>
+                        </div>
+                        <h2 class="text-xl font-bold font-heading text-slate-900">Habilidades Técnicas</h2>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-800">HTML, CSS & Tailwind CSS</span>
+                                <span class="text-rose-600">85%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div class="bg-rose-600 h-full rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-800">Soporte Técnico & Mantenimiento PC</span>
+                                <span class="text-rose-600">90%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div class="bg-rose-600 h-full rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-800">JavaScript Intermedio</span>
+                                <span class="text-rose-600">75%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div class="bg-rose-600 h-full rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-800">Lógica de Programación & Arduino</span>
+                                <span class="text-rose-600">80%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                <div class="bg-rose-600 h-full rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FODA Personal (Fortalezas & Debilidades) -->
+                <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                        <h2 class="text-xl font-bold font-heading text-slate-900">Fortalezas & Debilidades</h2>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl">
+                            <h4 class="font-bold text-emerald-900 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check text-emerald-600"></i> Fortalezas
+                            </h4>
+                            <p class="text-emerald-800">Resiliencia y espíritu emprendedor, alta proactividad, aprendizaje veloz de nuevas herramientas de software y atención al detalle.</p>
+                        </div>
+
+                        <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl">
+                            <h4 class="font-bold text-amber-900 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-600"></i> Debilidades (Puntos a Mejorar)
+                            </h4>
+                            <p class="text-amber-800">Autoexigencia y perfeccionismo elevado en el acabado visual (en constante mejora delegando tareas e impaciencia en tareas muy lentas).</p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- 8. PASATIEMPOS E INTERESES (HOBBIES) -->
+            <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold font-heading text-slate-900">Pasatiempos e Intereses</h2>
+                        <p class="text-xs text-slate-500">Actividades que complementan mi desarrollo profesional y personal</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center hover:bg-slate-100 transition">
+                        <i class="fa-solid fa-microchip text-rose-500 text-xl mb-2"></i>
+                        <h3 class="text-xs font-bold text-slate-900">Electrónica & Tech</h3>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Proyectos Arduino</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center hover:bg-slate-100 transition">
+                        <i class="fa-solid fa-palette text-violet-500 text-xl mb-2"></i>
+                        <h3 class="text-xs font-bold text-slate-900">Cosmética & Belleza</h3>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Skincare & SkinGlow</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center hover:bg-slate-100 transition">
+                        <i class="fa-solid fa-laptop-code text-indigo-500 text-xl mb-2"></i>
+                        <h3 class="text-xs font-bold text-slate-900">Desarrollo Web</h3>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Nuevos frameworks</p>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center hover:bg-slate-100 transition">
+                        <i class="fa-solid fa-book-open text-emerald-500 text-xl mb-2"></i>
+                        <h3 class="text-xs font-bold text-slate-900">Lectura & Aprendizaje</h3>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Crecimiento continuo</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. ¿CÓMO ME CONOCEN LAS PERSONAS? (PERCEPCIÓN / TESTIMONIOS) -->
+            <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-quote-left"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold font-heading text-slate-900">¿Cómo me conocen las personas?</h2>
+                        <p class="text-xs text-slate-500">Apreciación del entorno académico, profesional y comercial</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <p class="text-xs text-slate-700 italic leading-relaxed">
+                            "Mayda es muy dedicada y perfeccionista. Cuando asume una responsabilidad tecnológica, se asegura de que todo funcione al 100%."
+                        </p>
+                        <div class="mt-4 pt-3 border-t border-slate-200 flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-full bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center">C</div>
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-900">Compañera de Estudios</h3>
+                                <p class="text-[10px] text-slate-500">IESTP Santa Lucía</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <p class="text-xs text-slate-700 italic leading-relaxed">
+                            "Impecable atención en SkinGlow. Es amable, puntual y muy clara para explicar las características de cada producto."
+                        </p>
+                        <div class="mt-4 pt-3 border-t border-slate-200 flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-full bg-violet-100 text-violet-700 font-bold text-xs flex items-center justify-center">K</div>
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-900">Cliente de SkinGlow</h3>
+                                <p class="text-[10px] text-slate-500">Juliaca / Puno</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <p class="text-xs text-slate-700 italic leading-relaxed">
+                            "Demuestra constante interés por aprender nuevas tecnologías de programación y resolver fallas técnicas con pensamiento lógico."
+                        </p>
+                        <div class="mt-4 pt-3 border-t border-slate-200 flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 font-bold text-xs flex items-center justify-center">D</div>
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-900">Docente de Especialidad</h3>
+                                <p class="text-[10px] text-slate-500">Área de Computación</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 10. FORMULARIO DE CONTACTO DIRECTO (GMAIL & WHATSAPP) -->
+            <section class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="max-w-2xl mx-auto">
+                    <div class="text-center mb-6">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-rose-50 text-rose-600 mb-2">
+                            <i class="fa-solid fa-paper-plane text-lg"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold font-heading text-slate-900">Enviar Mensaje Directo</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">El mensaje llegará a <strong class="text-slate-800">maydaperezmamani@gmail.com</strong></p>
+                    </div>
+
+                    <form id="contactForm" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Tu Nombre</label>
+                                <input type="text" id="contactName" required placeholder="Ej. Juan Pérez" 
+                                    class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-900 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Tu Correo</label>
+                                <input type="email" id="contactEmail" required placeholder="tuemail@ejemplo.com" 
+                                    class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-900 text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Asunto</label>
+                            <input type="text" id="contactSubject" required placeholder="Oportunidad Laboral / Consulta" 
+                                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-900 text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Mensaje</label>
+                            <textarea id="contactMessage" rows="3" required placeholder="Escribe tu mensaje..." 
+                                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-900 text-sm"></textarea>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                            <button type="submit" 
+                                class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl shadow-sm transition text-xs flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Enviar Mensaje (Simulación)</span>
+                            </button>
+                            <a href="https://wa.me/51914713607?text=Hola%20Mayda,%20te%20escribo%20desde%20tu%20CV" target="_blank" rel="noopener"
+                                class="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition text-xs flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>WhatsApp Directo</span>
+                            </a>
+                            <button type="button" onclick="openDirectGmail()" 
+                                class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-semibold rounded-xl transition text-xs flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-envelope text-rose-500"></i>
+                                <span>Abrir en Gmail</span>
+                            </button>
+                        </div>
+
+                        <div id="contactSuccess" class="hidden p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs text-center font-medium">
+                            <i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i> Mensaje simulado correctamente. ¡Gracias por escribir!
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="mt-12 text-center text-xs text-slate-400 py-6 border-t border-slate-200 bg-white">
+            <p>© Mayda Shirley Pérez Mamani — Juliaca / Puno, Perú</p>
+        </footer>
+    </div>
+
+    <!-- MODAL DE VISUALIZACIÓN DE DIPLOMAS / FOTOS -->
+    <div id="diplomaModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4">
+        <div class="max-w-2xl w-full bg-white border border-slate-200 rounded-2xl p-5 relative shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-800 text-xl p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="modalTitle" class="text-base font-bold text-slate-900 mb-3 font-heading">Vista Previa</h3>
+            <div class="h-80 rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center">
+                <img id="modalImage" src="" alt="Diploma" class="max-h-full max-w-full object-contain">
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT DE AUTENTICACIÓN E INTERACTIVIDAD -->
+    <script>
+        const AUTH_USER = "mayda";
+        const AUTH_PASS = "12345";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("cv_is_logged_in") === "true") {
+                showCV();
+            }
+        });
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById("username").value.trim().toLowerCase();
+            const p = document.getElementById("password").value;
+            const err = document.getElementById("loginError");
+
+            if (u === AUTH_USER && p === AUTH_PASS) {
+                err.classList.add("hidden");
+                localStorage.setItem("cv_is_logged_in", "true");
+                showCV();
+            } else {
+                err.classList.remove("hidden");
+            }
+        }
+
+        function showCV() {
+            const login = document.getElementById("loginScreen");
+            const main = document.getElementById("mainContent");
+            login.classList.add("opacity-0", "pointer-events-none");
+            setTimeout(() => {
+                login.classList.add("hidden");
+                main.classList.remove("hidden");
+                main.classList.add("fade-in");
+            }, 250);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem("cv_is_logged_in");
+            location.reload();
+        }
+
+        function changeProfileImage(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    document.getElementById("profileImage").src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addGalleryImage(galleryId, e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const gallery = document.getElementById(galleryId);
+                    const div = document.createElement("div");
+                    div.className = "bg-slate-50 rounded-xl p-3.5 border border-slate-200 fade-in";
+                    div.innerHTML = `<div class="h-40 rounded-lg overflow-hidden bg-slate-200"><img src="${event.target.result}" class="w-full h-full object-cover"></div>`;
+                    gallery.prepend(div);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addDiploma(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const gallery = document.getElementById("diplomasGallery");
+                    const card = document.createElement("div");
+                    card.className = "bg-slate-50 rounded-xl p-3.5 border border-slate-200 hover:border-slate-300 transition group fade-in";
+                    card.innerHTML = `
+                        <div class="h-40 rounded-lg overflow-hidden mb-3 relative bg-slate-200">
+                            <img src="${event.target.result}" class="w-full h-full object-cover">
+                            <button onclick="openModal('${event.target.result}', 'Nuevo Documento Cargado')" class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium gap-2">
+                                <i class="fa-solid fa-expand"></i> Ver Certificado
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-xs text-slate-900">Nuevo Certificado</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Documento adjuntado</p>
+                    `;
+                    gallery.prepend(card);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function openModal(imgSrc, title) {
+            document.getElementById("modalImage").src = imgSrc;
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("diplomaModal").classList.remove("hidden");
+        }
+
+        function closeModal() {
+            document.getElementById("diplomaModal").classList.add("hidden");
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const successDiv = document.getElementById("contactSuccess");
+            successDiv.classList.remove("hidden");
+            setTimeout(() => {
+                successDiv.classList.add("hidden");
+                document.getElementById("contactForm").reset();
+            }, 3500);
+        }
+
+        function openDirectGmail() {
+            const name = encodeURIComponent(document.getElementById("contactName").value || "Consulta");
+            const subject = encodeURIComponent(document.getElementById("contactSubject").value || "Contacto CV Mayda");
+            const body = encodeURIComponent(document.getElementById("contactMessage").value || "Hola Mayda, me comunico contigo desde tu CV.");
+            window.open(`mailto:maydaperezmamani@gmail.com?subject=${subject}&body=Nombre: ${name}%0D%0A%0D%0A${body}`, '_blank');
+        }
+    </script>
+</body>
+</html>
